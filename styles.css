@@ -102,6 +102,7 @@ body {
 
 .navegacion {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.25rem;
   border-right: 1px solid var(--rule-light);
   padding-right: 1.25rem;
@@ -806,13 +807,13 @@ select {
   transform: scaleX(1.12);
 }
 
-/* ==================== VISTA CÓDICE ==================== */
+/* ==================== VISTA CÓDICE Y CONTROLES ==================== */
 .cabecera-codice {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: end;
-  gap: 1.5rem;
+  gap: 1.25rem;
   padding-bottom: 1.4rem;
   margin-bottom: 2rem;
   border-bottom: 1px solid var(--rule-heavy);
@@ -832,15 +833,31 @@ select {
 
 .controles-codice {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.65rem;
 }
 
 .filtros-categoria {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+}
+
+.filtros-secundarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.filtros-secundarios select {
+  width: auto;
+  min-width: 165px;
+}
+
+.filtros-secundarios input[type="search"] {
+  width: min(240px, 100%);
 }
 
 .cat-btn {
@@ -852,6 +869,7 @@ select {
   font-size: 0.88rem;
   font-weight: 500;
   cursor: pointer;
+  font-variant-numeric: tabular-nums;
 }
 
 .cat-btn:hover {
@@ -862,10 +880,6 @@ select {
   background: var(--accent-seal);
   border-color: var(--accent-seal);
   color: #ffffff;
-}
-
-.controles-codice input[type="search"] {
-  width: min(260px, 100%);
 }
 
 .grilla-codice {
@@ -899,6 +913,12 @@ select {
   border-top-color: var(--accent-seal);
 }
 
+/* Contenedor de retrato + sello MUERTO sobresaliente */
+.codice-retrato-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .codice-retrato-box {
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -914,6 +934,32 @@ select {
   object-fit: cover;
   object-position: center 22%;
   display: block;
+}
+
+.es-muerto img {
+  filter: grayscale(88%) contrast(1.06) brightness(0.84);
+}
+
+.cinta-muerto {
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  right: -6px;
+  transform: translateY(-50%) rotate(-3deg);
+  background: var(--accent-seal);
+  color: #ffffff;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.34rem 0.5rem;
+  border-top: 2px solid var(--bg-folio);
+  border-bottom: 2px solid var(--bg-folio);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.36);
+  pointer-events: none;
+  z-index: 3;
 }
 
 .codice-retrato-fallback {
@@ -1027,9 +1073,192 @@ select {
   grid-column: 1 / -1;
   padding: 2rem;
   background: var(--bg-margin);
+  border: 1px solid var(--rule-light);
   border-radius: 6px;
   text-align: center;
   color: var(--ink-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* ==================== VISTA RED DE FACCIONES ==================== */
+.grilla-facciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 1.25rem;
+}
+
+.card-faccion {
+  background: var(--bg-margin);
+  border: 1px solid var(--rule-light);
+  border-top: 3px solid var(--rule-heavy);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-faccion:hover {
+  transform: translateY(-2px);
+  border-top-color: var(--accent-seal);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.card-faccion-top {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.card-faccion-avatar-wrap {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+}
+
+.card-faccion-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-folio);
+  border: 1px solid var(--rule-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-faccion-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cinta-muerto-mini {
+  position: absolute;
+  top: 50%;
+  left: -4px;
+  right: -4px;
+  transform: translateY(-50%) rotate(-4deg);
+  background: var(--accent-seal);
+  color: #ffffff;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.12rem 0.2rem;
+  border-top: 1px solid var(--bg-folio);
+  border-bottom: 1px solid var(--bg-folio);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.card-faccion-inicial {
+  font-family: var(--font-book);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-seal);
+}
+
+.card-faccion-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-faccion-nombre {
+  margin: 0;
+  font-family: var(--font-book);
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--ink-primary);
+}
+
+.card-faccion-raza {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.badge-faccion {
+  align-self: flex-start;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0.14rem 0.55rem;
+  border-radius: 4px;
+  background: var(--accent-tint);
+  color: var(--accent-seal);
+}
+
+.badge-faccion[data-faccion="Howl of hope"] {
+  background: rgba(46, 125, 82, 0.15);
+  color: #2e7d52;
+}
+
+html[data-tema="noche"] .badge-faccion[data-faccion="Howl of hope"],
+html[data-tema="oscuro"] .badge-faccion[data-faccion="Howl of hope"] {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.badge-faccion[data-faccion="Los de una tierra distante"] {
+  background: rgba(126, 58, 242, 0.14);
+  color: #7e3af2;
+}
+
+html[data-tema="noche"] .badge-faccion[data-faccion="Los de una tierra distante"],
+html[data-tema="oscuro"] .badge-faccion[data-faccion="Los de una tierra distante"] {
+  background: rgba(192, 132, 252, 0.16);
+  color: #c084fc;
+}
+
+.badge-faccion[data-faccion="Independiente"] {
+  background: var(--bg-folio);
+  color: var(--ink-muted);
+  border: 1px solid var(--rule-light);
+}
+
+.confianza-bloque {
+  margin-top: auto;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--rule-light);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.confianza-cabecera {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.confianza-cabecera strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.confianza-pista {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-folio);
+  border: 1px solid var(--rule-light);
+  overflow: hidden;
+}
+
+.confianza-relleno {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
 }
 
 /* ==================== MODAL DE FICHA DE CÓDICE ==================== */
@@ -1037,6 +1266,7 @@ select {
   width: min(820px, calc(100% - 2rem));
   max-height: 88vh;
   padding: 0;
+  overflow: hidden;
   border: 1px solid var(--rule-light);
   border-top: 4px solid var(--accent-seal);
   border-radius: 14px;
@@ -1091,6 +1321,11 @@ select {
 
 .modal-codice-grid.sin-imagen {
   grid-template-columns: 1fr;
+}
+
+.modal-retrato-wrapper {
+  position: relative;
+  width: 100%;
 }
 
 .modal-retrato-completo {
@@ -1199,6 +1434,18 @@ select {
   gap: 0.75rem;
 }
 
+/* Oculta visualmente las barras en el modal y vínculos manteniendo el scroll */
+[class*="modal"]::-webkit-scrollbar,
+[class*="vinculo"]::-webkit-scrollbar {
+  display: none;
+}
+
+[class*="modal"],
+[class*="vinculo"] {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .escenario-personajes,
   .pila-cartas-wrapper,
@@ -1207,7 +1454,8 @@ select {
   .linea-indicador,
   .btn-forma,
   .btn-mini-pila,
-  .entrada-codice {
+  .entrada-codice,
+  .card-faccion {
     transition: none;
   }
 }
@@ -1232,6 +1480,16 @@ select {
     grid-template-columns: 1fr;
     gap: 1.5rem;
     min-height: auto;
+  }
+
+  .controles-codice {
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .filtros-secundarios select,
+  .filtros-secundarios input[type="search"] {
+    width: 100%;
   }
 
   .modal-codice-grid {

@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Crónica novelada, archivo de protagonistas y códice de El misterioso mundo de Rubén.">
+  <meta name="description" content="Crónica novelada, archivo de protagonistas, red de facciones y códice de El misterioso mundo de Rubén.">
   <title>El misterioso mundo de Rubén</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,6 +23,7 @@
           <button type="button" class="nav-btn activo" data-vista="lector">Novela</button>
           <button type="button" class="nav-btn" data-vista="personajes">Personajes</button>
           <button type="button" class="nav-btn" data-vista="codice">Códice</button>
+          <button type="button" class="nav-btn" data-vista="facciones">Facciones</button>
         </nav>
 
         <div class="controles-lectura" aria-label="Ajustes de lectura">
@@ -133,12 +134,56 @@
             <button type="button" class="cat-btn" data-cat="Facción">Facciones</button>
             <button type="button" class="cat-btn" data-cat="Objeto">Objetos</button>
           </div>
-          <label for="buscar-codice" class="sr-only">Buscar en el códice</label>
-          <input type="search" id="buscar-codice" placeholder="Buscar nombre, lugar o detalle">
+
+          <div class="filtros-secundarios">
+            <select id="filtro-raza-codice" aria-label="Filtrar por raza">
+              <option value="todas">Todas las razas</option>
+            </select>
+            <select id="filtro-estado-codice" aria-label="Filtrar por estado vital">
+              <option value="todos">Todos los estados</option>
+              <option value="vivos">Vivos / Activos</option>
+              <option value="muertos">Muertos</option>
+            </select>
+            <label for="buscar-codice" class="sr-only">Buscar en el códice</label>
+            <input type="search" id="buscar-codice" placeholder="Buscar nombre, raza o detalle">
+          </div>
         </div>
       </div>
 
       <div id="grilla-codice" class="grilla-codice"></div>
+    </section>
+
+    <!-- VISTA 4: RED DE FACCIONES -->
+    <section id="vista-facciones" class="vista" hidden aria-label="Red de facciones y confianza">
+      <div class="cabecera-codice">
+        <div>
+          <h2>Red de facciones</h2>
+          <p class="descripcion-codice">Afiliaciones actuales de los personajes y nivel de confianza con el grupo.</p>
+        </div>
+
+        <div class="controles-codice">
+          <div id="filtros-faccion" class="filtros-categoria" role="group" aria-label="Filtrar por facción"></div>
+
+          <div class="filtros-secundarios">
+            <select id="filtro-raza-facciones" aria-label="Filtrar facciones por raza">
+              <option value="todas">Todas las razas</option>
+            </select>
+            <select id="filtro-estado-facciones" aria-label="Filtrar facciones por estado vital">
+              <option value="todos">Todos los estados</option>
+              <option value="vivos">Vivos</option>
+              <option value="muertos">Muertos</option>
+            </select>
+            <select id="orden-facciones" aria-label="Ordenar por confianza o nombre">
+              <option value="original">Orden de archivo</option>
+              <option value="confianza-desc">De mayor a menor confianza</option>
+              <option value="confianza-asc">De menor a mayor confianza</option>
+              <option value="nombre-asc">Nombre (A - Z)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="grilla-facciones" class="grilla-facciones"></div>
     </section>
   </main>
 
@@ -152,7 +197,7 @@
 
   <footer class="pie">
     <div class="contenedor pie-inner">
-      <span>El misterioso mundo de Rubén</span>
+      <span>El misterioso mundo de Rubén — Obra de ficción de fans sin fines de lucro basada en World of Darkness.</span>
       <span id="estadisticas-archivo"></span>
     </div>
   </footer>

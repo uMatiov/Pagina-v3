@@ -11,14 +11,15 @@ const DATOS_CAMPANA = {
       vinculos: [
         {
           nombre: "Alexander",
-          relacion: "Compañero de grupo"
+          relacion: "Mob lo considera amigo cercano y confia en el"
         },
         { nombre: "Gaspar", relacion: "Figura paterna y padre adoptivo; lo rescató de niño y siempre lo visita en su cumpleaños" },
-        { nombre: "Ophelia", 
-          relacion: "Compañera de trabajo (Ala de Adal)" 
+        {
+          nombre: "Ophelia",
+          relacion: "Compañera de trabajo (Ala de Adal), y usualmente mob le envia mensajes randoms"
         },
         { nombre: "Adal Wanderley", relacion: "Duque y fundador de «Howl of hope»; trabaja para él como una de sus Alas junto a Ophelia." },
-        { nombre: "Raymundo", relacion: "Su mentor actual y compañero en «Howl of hope»" },
+        { nombre: "Raymundo", relacion: "Su mentor actual y compañero en «Howl of hope»" }
       ]
     },
     {
@@ -33,8 +34,8 @@ const DATOS_CAMPANA = {
         { nombre: "Emily Osler", relacion: "Expareja; se reunieron tras la destrucción de Río y ella decidió dejar su relación atrás para seguir adelante" },
         { nombre: "Kei Knight", relacion: "Antiguo Alexander Número 4; desprecia al resto de los discípulos de Djork" },
         { nombre: "Alexander Djork", relacion: "Su maestro en la Tríada; de quien heredó el nombre clave «Alexander» y su entrenamiento" },
-        { nombre: "Robin",  relacion: "Aliado en el festival"}
-        ,{ nombre: "Adal Wanderley", relacion: "Duque supervisor de la Tríada y fundador de «Howl of hope»; aliado de alta confianza (+60%) al que ayudaron a liberar de Zhi'zhak." },
+        { nombre: "Mob", relacion: "Alexander lo considera amigo cercano y confía en él" },
+        { nombre: "Adal Wanderley", relacion: "Duque supervisor de la Tríada y fundador de «Howl of hope»; aliado de alta confianza (+60%) al que ayudaron a liberar de Zhi'zhak." }
       ]
     },
     {
@@ -51,10 +52,10 @@ const DATOS_CAMPANA = {
           relacion: "Pequeño compañero bajo su cuidado"
         },
         {
-          nombre: "calipso",
+          nombre: "Calipso",
           relacion: "Vínculo cercano en el cuidado de Marquitas"
         },
-        { nombre: "Saly Abara", relacion: "Amigo y pana; Simba juguetón pero leal que da todo por sus amigos" },
+        { nombre: "Saly Abara", relacion: "Amigo y pana; Simba juguetón pero leal que da todo por sus amigos" }
       ]
     },
     {
@@ -66,9 +67,9 @@ const DATOS_CAMPANA = {
       rasgoClave: "Por definir",
       estadoActual: "Activo en campaña",
       vinculos: [
-        ,{ nombre: "Adam Arc (Muerto)", relacion: "Su antiguo mentor; un sabio Nuwisha poco convencional asesinado por Kei" },
+        { nombre: "Adam Arc (Muerto)", relacion: "Su antiguo mentor; un sabio Nuwisha poco convencional asesinado por Kei" },
         { nombre: "Kei Knight", relacion: "Expareja; tuvieron una relación pasajera en el pasado, además de ser el asesino de su mentor Adam Arc" },
-        { nombre: "Adal Wanderley", relacion: "Duque supervisor de la Tríada y fundador de «Howl of hope»; aliado de alta confianza (+60%) al que ayudaron a liberar de Zhi'zhak." },
+        { nombre: "Adal Wanderley", relacion: "Duque supervisor de la Tríada y fundador de «Howl of hope»; aliado de alta confianza (+60%) al que ayudaron a liberar de Zhi'zhak." }
       ]
     },
     {
@@ -83,10 +84,9 @@ const DATOS_CAMPANA = {
         {
           nombre: "Emily Osler",
           relacion: "Cercana durante el festival"
-        }
-        , 
-       { nombre: "Hiroshi Ito", relacion: "Padre adoptivo y maestro de medicina; le enseñó sobre su naturaleza como Garou Metis" },
-        { nombre: "Adal Wanderley", relacion: "Duque supervisor de la Tríada y fundador de «Howl of hope»; aliado de alta confianza (+60%) al que ayudaron a liberar de Zhi'zhak." },
+        },
+        { nombre: "Hiroshi Ito", relacion: "Padre adoptivo y maestro de medicina; le enseñó sobre su naturaleza como Garou Metis" },
+        { nombre: "Adal Wanderley", relacion: "Duque supervisor de la Tríada y fundador de «Howl of hope»; aliado de alta confianza (+60%) al que ayudaron a liberar de Zhi'zhak." }
       ]
     },
     {
@@ -95,7 +95,10 @@ const DATOS_CAMPANA = {
       resumen: "Escribe aquí su historia breve, estilo y papel dentro de la campaña.",
       rasgoClave: "Doble forma (Hombre / Femenina)",
       estadoActual: "Activo en campaña",
-      vinculos: [{ nombre: "Asher Bauer", relacion: "Secuestrada por su hermano Nisha para ayudarla; nueva aliada en Río" }],
+      vinculos: [
+        { nombre: "Asher Bauer", relacion: "Secuestrada por su hermano Nisha para ayudarla; nueva aliada en Río." },
+        { nombre: "Adal Wanderley", relacion: "Duque supervisor de la Tríada y fundador de «Howl of hope»; aliado de alta confianza (+60%) al que ayudaron a liberar de Zhi'zhak." }
+      ],
       formas: [
         {
           etiqueta: "Hombre",
@@ -108,7 +111,7 @@ const DATOS_CAMPANA = {
           imagen: "img/morgan_femenina",
           encuadre: "center 15%",
           resumen: "Descripción o actitud de Morgan en su forma femenina."
-        } , { nombre: "Adal Wanderley", relacion: "Duque supervisor de la Tríada y fundador de «Howl of hope»; aliado de alta confianza (+60%) al que ayudaron a liberar de Zhi'zhak." },
+        }
       ]
     },
     {
@@ -127,6 +130,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Adal Wanderley",
       categoria: "NPC",
+      faccion: "Howl of hope",
       imagen: "img/adal_wanderley",
       encuadre: "center 20%",
       aparicionCap: 1,
@@ -149,9 +153,10 @@ const DATOS_CAMPANA = {
         "Actualmente impulsa este proyecto con la ayuda de algunos conocidos y nuevos miembros, mientras espera encontrar pistas sobre Casval Wanderley para poder salvar a su hermano Calipso."
       ]
     },
-   {
+    {
       nombre: "Emily Osler",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/emily_osler",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -175,6 +180,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Calipso",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/calipso",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -204,6 +210,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "David Hernández",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/david_hernandez",
       encuadre: "center 20%",
       aparicionCap: 1,
@@ -228,6 +235,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Casval Warderley",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/casval_warderley",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -252,6 +260,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Miqo",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/miqo",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -276,6 +285,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Mara Lavallée",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/mara_lavallee",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -297,9 +307,10 @@ const DATOS_CAMPANA = {
         "Luego de la destrucción de Río de Janeiro decidió tomar vacaciones junto a su hija y su madre mientras inicia la reconstrucción de la ciudad. Tiempo después de la disolución del equipo de Río recibió una propuesta laboral del duque Adal que rechazó, aunque llegaron a un acuerdo para proporcionarle información."
       ]
     },
-   {
+    {
       nombre: "Raymundo",
       categoria: "NPC",
+      faccion: "Howl of hope",
       imagen: "img/raymundo",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -323,6 +334,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Bryon",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/bryon",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -346,6 +358,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Amelia Mesquita Vaz",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/amelia_mesquita_vaz",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -370,6 +383,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Adolf Dos Santos (Muerto)",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/adolf_dos_santos",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -396,6 +410,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Elmer Abara",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/elmer_abara",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -420,6 +435,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Nayah Abara",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/nayah_abara",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -443,6 +459,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Zahir Abara",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/zahir_abara",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -467,6 +484,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Saly Abara",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/saly_abara",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -487,9 +505,10 @@ const DATOS_CAMPANA = {
         "Luego de la destrucción de Río de Janeiro decidió apoyar a las personas afectadas; sin embargo, su padre tomó la decisión de llevárselo hacia África para entrenarlo en serio, algo que no resultó nada del gusto de Saly."
       ]
     },
-   {
+    {
       nombre: "William Osler",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/william_osler",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -514,6 +533,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Gaspar",
       categoria: "NPC",
+      faccion: "Los de una tierra distante",
       imagen: "img/gaspar",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -532,13 +552,14 @@ const DATOS_CAMPANA = {
       descripcion: [
         "Durante muchos años fue trabajador de la Tríada, siendo líder del equipo formado por Alexander, Johari y Zuri, aunque todos terminaron distanciándose poco a poco. Actualmente sigue en buenos términos con Zuri y Johari; no obstante, con Alexander Djork tuvo un fuerte conflicto al presentar ambos ideas para un proyecto ante la Tríada: al aprobarse el de Djork y rechazarse el suyo, pelearon por el trato inhumano hacia las personas bajo su mando, lo que terminó con la renuncia de Gaspar para convertirse en investigador privado con una vieja amiga.",
         "Antes de ser investigador privado, Gaspar se dedicaba a liberar esclavos en varios lugares junto a Amanda y su grupo, los Libertadores. Durante muchos años se ha entregado por completo a quienes salva, llegando a considerar a los niños liberados como sus propios hijos y cuidando de todos por igual.",
-        "Con el tiempo Gaspar y Amanda tomaron caminos separados y él se dedicó a investigar conspiraciones y rutas de narcotráfico. Aunque siempre está de viaje por sus casos, visita a sus niños cada cumpleaños mientras Amanda los cuida de cerca.",
+        "Con el tiempo Gaspar y Amanda tomaron caminos separados y él se dedicó a investigar conspiraciones y rutas de narcotráfico. Aunque siempre está de viaje por sus casos, visita a sus niños cada cumpleaños —entre ellos Mob— mientras Amanda los cuida de cerca.",
         "Actualmente se encuentra expectante ante lo que hará Ito, esperando saber si tiene razón o si deberá darle un disparo en la cabeza."
       ]
     },
-   {
+    {
       nombre: "Alexander Djork",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/alexander_djork",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -555,7 +576,7 @@ const DATOS_CAMPANA = {
         Confianza: "40%"
       },
       descripcion: [
-        "Agente altamente entrenado con la peculiar característica de que todos sus aprendices llevan su mismo nombre («Alexander»), destacando como agentes de élite o por sus poderes. Aunque suele entrenar humanos, de vez en cuando admite a algún no-humano.",
+        "Agente altamente entrenado con la peculiar característica de que todos sus aprendices llevan su mismo nombre («Alexander»), destacando como agentes de élite o por sus poderes. Aunque suele entrenar humanos, de vez en cuando admite a algún no-humano —entre ellos el propio Alexander del equipo de Río—.",
         "Es un hombre de pocos amigos e incluso distante con su antiguo equipo, comunicándose con ellos solo para obtener algún beneficio de sus habilidades o cumplir un objetivo, aunque en ocasiones realiza misiones con Diego, con quien mantiene amistad desde hace años.",
         "Suele mostrar poco respeto hacia las personas, salvo hacia los líderes de la Tríada, a quienes respeta enormemente y cuyas órdenes acata lo más rápido posible, teniendo como favorito al Rey Banagher Links (rey de las razas cambiantes).",
         "Actualmente se encuentra recuperándose de quemaduras graves: tras los sucesos de Río se preparaba para una traición de Número 4, pero al confrontar a Kei ambos pelearon y Djork perdió, quedando en mal estado.",
@@ -565,6 +586,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Hiroshi Ito",
       categoria: "NPC",
+      faccion: "Los de una tierra distante",
       imagen: "img/hiroshi_ito",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -591,6 +613,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Adam Arc (Muerto)",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/adam_arc",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -612,9 +635,10 @@ const DATOS_CAMPANA = {
         "Años después llegó a relacionarse con la Tríada y con «Los de una tierra distante» bajo intenciones desconocidas. Las consecuencias de aquellos tratos lo llevaron a ser cazado y asesinado por Kei, un hecho que destrozó a su hermana menor y la llenó de odio."
       ]
     },
-   {
+    {
       nombre: "Eva Arc",
       categoria: "NPC",
+      faccion: "Howl of hope",
       imagen: "img/eva_arc",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -641,6 +665,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Kei Knight",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/kei_knight",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -666,6 +691,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "María Guzmán",
       categoria: "NPC",
+      faccion: "Independiente",
       imagen: "img/maria_guzman",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -690,6 +716,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Luther Stroude",
       categoria: "NPC",
+      faccion: "Howl of hope",
       imagen: "img/luther_stroude",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -714,6 +741,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Ophelia",
       categoria: "NPC",
+      faccion: "Howl of hope",
       imagen: "img/ophelia",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -737,6 +765,7 @@ const DATOS_CAMPANA = {
     {
       nombre: "Asher Bauer",
       categoria: "NPC",
+      faccion: "Howl of hope",
       imagen: "img/asher_bauer",
       encuadre: "center 20%",
       aparicionCap: null,
@@ -759,7 +788,7 @@ const DATOS_CAMPANA = {
         "Actualmente ha decidido vivir en Río como una forma de dar un nuevo giro a su vida y ayudar a sus nuevos amigos, quienes la acogieron a pesar de la extraña manera en que llegó hasta ellos.",
         "Dato curioso: Asher es muy hábil con la herrería y la tecnología; su padre le enseñó herrería y aprovechaba su tiempo libre en la iglesia para fabricar equipamiento de cacería de criaturas, llegando a diseñar su propia arma llamada «Testament»."
       ]
-    },
+    }
   ],
 
   capitulos: []

@@ -62,7 +62,14 @@
   const lineasDOM = [];
 
   let categoriaCodiceActiva = "todos";
+  let razaCodiceActiva = "todas";
+  let estadoCodiceActivo = "todos";
   let nombreDestacadoCodice = "";
+
+  let faccionActiva = "todas";
+  let razaFaccionesActiva = "todas";
+  let estadoFaccionesActivo = "todos";
+  let ordenFaccionesActivo = "original";
 
   const elListaCap = document.getElementById("lista-capitulos");
   const elFiltroArco = document.getElementById("filtro-arco");
@@ -94,9 +101,17 @@
 
   const elGrillaCodice = document.getElementById("grilla-codice");
   const elBuscarCodice = document.getElementById("buscar-codice");
+  const elFiltroRazaCodice = document.getElementById("filtro-raza-codice");
+  const elFiltroEstadoCodice = document.getElementById("filtro-estado-codice");
   const elModalCodice = document.getElementById("modal-codice");
   const elModalCodiceCuerpo = document.getElementById("modal-codice-cuerpo");
   const elBtnCerrarModalCodice = document.getElementById("btn-cerrar-modal-codice");
+
+  const elFiltrosFaccion = document.getElementById("filtros-faccion");
+  const elFiltroRazaFacciones = document.getElementById("filtro-raza-facciones");
+  const elFiltroEstadoFacciones = document.getElementById("filtro-estado-facciones");
+  const elOrdenFacciones = document.getElementById("orden-facciones");
+  const elGrillaFacciones = document.getElementById("grilla-facciones");
 
   function aplicarTema(tema) {
     const normalizado = tema === "noche" || tema === "oscuro" ? "noche" : "papel";
@@ -111,7 +126,58 @@
     aplicarTema(leerStorage("novela_tema", "papel"));
   }
 
-  /* ==================== UTILIDAD DE IMÁGENES ==================== */
+  /* ==================== UTILIDADES DE ESTADO, RAZA E IMÁGENES ==================== */
+  function esPersonajeMuerto(item) {
+    const estado = normalizarTexto(item?.ficha?.Estado || "");
+    return estado === "muerto" || /\(muerto\)/i.test(item?.nombre || "");
+  }
+
+  function obtenerEtiquetasRaza(item) {
+    const razaRaw = String(item?.ficha?.Raza || "").trim();
+    if (!razaRaw) return [];
+
+    const norm = normalizarTexto(razaRaw);
+    const etiquetas = [];
+
+    if (/human[oa]/.test(norm)) etiquetas.push("Humano / Humana");
+    if (/mago|maga/.test(norm)) etiquetas.push("Mago");
+    if (/simba/.test(norm)) etiquetas.push("Simba");
+    if (/changeling/.test(norm)) etiquetas.push("Changeling");
+    if (/garou|hombre lobo/.test(norm)) etiquetas.push("Garou / Hombre lobo");
+    if (/vampiro/.test(norm)) etiquetas.push("Vampiro");
+    if (/nuwisha/.test(norm)) etiquetas.push("Nuwisha");
+    if (/gurahl/.test(norm)) etiquetas.push("Gurahl");
+    if (/raza cambiante/.test(norm)) etiquetas.push("Raza cambiante");
+    if (/desconocid[oa]/.test(norm)) etiquetas.push("Desconocida");
+
+    if (etiquetas.length === 0) {
+      etiquetas.push(razaRaw);
+    }
+    return etiquetas;
+  }
+
+  function poblarFiltrosRaza() {
+    const conteoRazas = new Map();
+    entradasCodice.forEach(item => {
+      obtenerEtiquetasRaza(item).forEach(et => {
+        conteoRazas.set(et, (conteoRazas.get(et) || 0) + 1);
+      });
+    });
+
+    const ordenadas = [...conteoRazas.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+    [elFiltroRazaCodice, elFiltroRazaFacciones].forEach(selectEl => {
+      if (!selectEl) return;
+      selectEl.innerHTML = `<option value="todas">Todas las razas</option>`;
+      ordenadas.forEach(([raza, cantidad]) => {
+        const opt = document.createElement("option");
+        opt.value = raza;
+        opt.textContent = `${raza} (${cantidad})`;
+        selectEl.appendChild(opt);
+      });
+    });
+  }
+
   function obtenerCandidatosImagen(rutaImagen, nombreFallback) {
     const slug = normalizarTexto(nombreFallback).replace(/[^a-z0-9]+/g, "_");
     const rutaLimpia = (rutaImagen || `img/${slug}`).trim();
@@ -153,6 +219,8 @@
       if (actualizarHash) actualizarHashSilencioso("#personajes");
     } else if (nombreVista === "codice") {
       if (actualizarHash) actualizarHashSilencioso("#codice");
+    } else if (nombreVista === "facciones") {
+      if (actualizarHash) actualizarHashSilencioso("#facciones");
     } else if (nombreVista === "lector" && capitulos[indiceActual]) {
       const numPad = String(capitulos[indiceActual].numero).padStart(3, "0");
       if (actualizarHash) actualizarHashSilencioso(`#cap-${numPad}`);
@@ -167,6 +235,10 @@
     }
     if (hash === "#codice") {
       activarVista("codice", false);
+      return true;
+    }
+    if (hash === "#facciones") {
+      activarVista("facciones", false);
       return true;
     }
     const matchCap = hash.match(/^#cap-(\d+)$/);
@@ -513,9 +585,13 @@
     const entrada = entradasCodice.find(e => normalizarTexto(e.nombre) === objetivo);
 
     categoriaCodiceActiva = "todos";
-    document.querySelectorAll(".cat-btn").forEach(b => {
+    razaCodiceActiva = "todas";
+    estadoCodiceActivo = "todos";
+    document.querySelectorAll("#filtros-categoria-codice .cat-btn").forEach(b => {
       b.classList.toggle("activa", b.dataset.cat === "todos");
     });
+    if (elFiltroRazaCodice) elFiltroRazaCodice.value = "todas";
+    if (elFiltroEstadoCodice) elFiltroEstadoCodice.value = "todos";
     elBuscarCodice.value = "";
     nombreDestacadoCodice = entrada ? entrada.nombre : nombreBuscado;
 
@@ -743,6 +819,10 @@
     const debeMostrarCaja = Boolean(item.imagen) || item.categoria === "NPC";
     if (!debeMostrarCaja) return null;
 
+    const muerto = esPersonajeMuerto(item);
+    const wrapper = document.createElement("div");
+    wrapper.className = muerto ? "codice-retrato-wrapper es-muerto" : "codice-retrato-wrapper";
+
     const box = document.createElement("div");
     box.className = "codice-retrato-box";
 
@@ -769,7 +849,16 @@
 
     img.src = candidatos[0];
     box.appendChild(img);
-    return box;
+    wrapper.appendChild(box);
+
+    if (muerto) {
+      const cinta = document.createElement("div");
+      cinta.className = "cinta-muerto";
+      cinta.textContent = "MUERTO";
+      wrapper.appendChild(cinta);
+    }
+
+    return wrapper;
   }
 
   function abrirModalCodice(item) {
@@ -777,10 +866,14 @@
     elModalCodiceCuerpo.innerHTML = "";
 
     const tieneImagen = Boolean(item.imagen) || item.categoria === "NPC";
+    const muerto = esPersonajeMuerto(item);
     const grid = document.createElement("div");
     grid.className = tieneImagen ? "modal-codice-grid" : "modal-codice-grid sin-imagen";
 
     if (tieneImagen) {
+      const colWrapper = document.createElement("div");
+      colWrapper.className = muerto ? "modal-retrato-wrapper es-muerto" : "modal-retrato-wrapper";
+
       const colImg = document.createElement("div");
       colImg.className = "modal-retrato-completo";
 
@@ -803,16 +896,27 @@
       };
       img.src = candidatos[0];
       colImg.appendChild(img);
-      grid.appendChild(colImg);
+      colWrapper.appendChild(colImg);
+
+      if (muerto) {
+        const cinta = document.createElement("div");
+        cinta.className = "cinta-muerto";
+        cinta.textContent = "MUERTO";
+        colWrapper.appendChild(cinta);
+      }
+
+      grid.appendChild(colWrapper);
     }
 
     const colInfo = document.createElement("div");
 
+    const faccionTexto = (item.faccion && item.faccion.trim()) ? item.faccion.trim() : "";
     const cab = document.createElement("div");
     cab.className = "modal-info-cabecera";
     cab.innerHTML = `
       <h3 id="modal-codice-titulo">${item.nombre}</h3>
       <span class="codice-categoria">${item.categoria}</span>
+      ${faccionTexto ? `<span class="badge-faccion" data-faccion="${faccionTexto}">${faccionTexto}</span>` : ""}
     `;
     colInfo.appendChild(cab);
 
@@ -877,12 +981,36 @@
     }
   }
 
+  function limpiarFiltrosCodice() {
+    categoriaCodiceActiva = "todos";
+    razaCodiceActiva = "todas";
+    estadoCodiceActivo = "todos";
+    nombreDestacadoCodice = "";
+    elBuscarCodice.value = "";
+    if (elFiltroRazaCodice) elFiltroRazaCodice.value = "todas";
+    if (elFiltroEstadoCodice) elFiltroEstadoCodice.value = "todos";
+    document.querySelectorAll("#filtros-categoria-codice .cat-btn").forEach(b => {
+      b.classList.toggle("activa", b.dataset.cat === "todos");
+    });
+    renderizarCodice();
+  }
+
   function renderizarCodice() {
     elGrillaCodice.innerHTML = "";
     const query = elBuscarCodice.value.trim().toLowerCase();
 
     const filtradas = entradasCodice.filter(item => {
       const coincideCat = categoriaCodiceActiva === "todos" || item.categoria === categoriaCodiceActiva;
+
+      const etiquetasRaza = obtenerEtiquetasRaza(item);
+      const coincideRaza = razaCodiceActiva === "todas" || etiquetasRaza.includes(razaCodiceActiva);
+
+      const muerto = esPersonajeMuerto(item);
+      const coincideEstado =
+        estadoCodiceActivo === "todos" ||
+        (estadoCodiceActivo === "muertos" && muerto) ||
+        (estadoCodiceActivo === "vivos" && !muerto);
+
       const textoCompleto = Array.isArray(item.descripcion)
         ? item.descripcion.join(" ")
         : (item.descripcion || "");
@@ -890,12 +1018,22 @@
         !query ||
         item.nombre.toLowerCase().includes(query) ||
         textoCompleto.toLowerCase().includes(query) ||
-        (item.resumenCorto || "").toLowerCase().includes(query);
-      return coincideCat && coincideTexto;
+        (item.resumenCorto || "").toLowerCase().includes(query) ||
+        (item.faccion || "").toLowerCase().includes(query) ||
+        (item.ficha?.Raza || "").toLowerCase().includes(query);
+
+      return coincideCat && coincideRaza && coincideEstado && coincideTexto;
     });
 
     if (filtradas.length === 0) {
-      elGrillaCodice.innerHTML = `<p class="estado-vacio-codice">No hay entradas en el códice que coincidan con ese filtro.</p>`;
+      elGrillaCodice.innerHTML = `
+        <div class="estado-vacio-codice">
+          <span>No hay entradas en el códice que coincidan con esos filtros.</span>
+          <button type="button" class="tool-btn" id="btn-reset-codice">Limpiar filtros</button>
+        </div>
+      `;
+      const btnReset = document.getElementById("btn-reset-codice");
+      if (btnReset) btnReset.addEventListener("click", limpiarFiltrosCodice);
       return;
     }
 
@@ -955,6 +1093,193 @@
     });
   }
 
+  /* ==================== VISTA RED DE FACCIONES ==================== */
+  function analizarConfianza(item) {
+    const raw = String(item?.ficha?.Confianza ?? "Sin dato").trim();
+    const lower = raw.toLowerCase();
+
+    if (lower.includes("fallecido") || lower.includes("nula")) {
+      return { porcentaje: 0, texto: raw, color: "var(--ink-muted)", ordenValor: null };
+    }
+    if (raw === "Sin dato") {
+      return { porcentaje: 0, texto: "Sin dato", color: "var(--ink-muted)", ordenValor: null };
+    }
+
+    const match = raw.match(/-?\d+/);
+    const num = match ? parseInt(match[0], 10) : 0;
+
+    if (num < 0) {
+      return { porcentaje: Math.min(Math.abs(num), 100), texto: raw, color: "#b91c1c", ordenValor: num };
+    }
+    if (num >= 50) {
+      return { porcentaje: Math.min(num, 100), texto: raw, color: "#2e7d52", ordenValor: num };
+    }
+    if (num >= 25) {
+      return { porcentaje: Math.min(num, 100), texto: raw, color: "#c27803", ordenValor: num };
+    }
+    return { porcentaje: Math.max(num, 4), texto: raw, color: "var(--accent-seal)", ordenValor: num };
+  }
+
+  function limpiarFiltrosFacciones() {
+    faccionActiva = "todas";
+    razaFaccionesActiva = "todas";
+    estadoFaccionesActivo = "todos";
+    ordenFaccionesActivo = "original";
+    if (elFiltroRazaFacciones) elFiltroRazaFacciones.value = "todas";
+    if (elFiltroEstadoFacciones) elFiltroEstadoFacciones.value = "todos";
+    if (elOrdenFacciones) elOrdenFacciones.value = "original";
+    renderizarFacciones();
+  }
+
+  function renderizarFacciones() {
+    if (!elFiltrosFaccion || !elGrillaFacciones) return;
+
+    const npcs = entradasCodice
+      .filter(e => e.categoria === "NPC")
+      .map((e, idxOriginal) => ({
+        ...e,
+        idxOriginal,
+        faccionReal: (e.faccion && e.faccion.trim()) ? e.faccion.trim() : "Independiente"
+      }));
+
+    const faccionesBase = ["Howl of hope", "Los de una tierra distante", "Independiente"];
+    const extras = [...new Set(npcs.map(n => n.faccionReal))].filter(f => !faccionesBase.includes(f));
+    const listaFacciones = ["todas", ...faccionesBase, ...extras];
+
+    elFiltrosFaccion.innerHTML = "";
+    listaFacciones.forEach(fac => {
+      const total = fac === "todas"
+        ? npcs.length
+        : npcs.filter(n => n.faccionReal === fac).length;
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "cat-btn";
+      if (faccionActiva === fac) btn.classList.add("activa");
+      btn.textContent = fac === "todas" ? `Todas (${total})` : `${fac} (${total})`;
+      btn.addEventListener("click", () => {
+        faccionActiva = fac;
+        renderizarFacciones();
+      });
+      elFiltrosFaccion.appendChild(btn);
+    });
+
+    let visibles = npcs.filter(item => {
+      const coincideFac = faccionActiva === "todas" || item.faccionReal === faccionActiva;
+      const etiquetasRaza = obtenerEtiquetasRaza(item);
+      const coincideRaza = razaFaccionesActiva === "todas" || etiquetasRaza.includes(razaFaccionesActiva);
+      const muerto = esPersonajeMuerto(item);
+      const coincideEstado =
+        estadoFaccionesActivo === "todos" ||
+        (estadoFaccionesActivo === "muertos" && muerto) ||
+        (estadoFaccionesActivo === "vivos" && !muerto);
+
+      return coincideFac && coincideRaza && coincideEstado;
+    });
+
+    if (ordenFaccionesActivo === "confianza-desc") {
+      visibles.sort((a, b) => {
+        const va = analizarConfianza(a).ordenValor;
+        const vb = analizarConfianza(b).ordenValor;
+        if (va === null && vb === null) return a.idxOriginal - b.idxOriginal;
+        if (va === null) return 1;
+        if (vb === null) return -1;
+        return vb - va;
+      });
+    } else if (ordenFaccionesActivo === "confianza-asc") {
+      visibles.sort((a, b) => {
+        const va = analizarConfianza(a).ordenValor;
+        const vb = analizarConfianza(b).ordenValor;
+        if (va === null && vb === null) return a.idxOriginal - b.idxOriginal;
+        if (va === null) return 1;
+        if (vb === null) return -1;
+        return va - vb;
+      });
+    } else if (ordenFaccionesActivo === "nombre-asc") {
+      visibles.sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+    }
+
+    elGrillaFacciones.innerHTML = "";
+    if (visibles.length === 0) {
+      elGrillaFacciones.innerHTML = `
+        <div class="estado-vacio-codice">
+          <span>No hay personajes que coincidan con esos filtros de facción, raza o estado.</span>
+          <button type="button" class="tool-btn" id="btn-reset-facciones">Limpiar filtros</button>
+        </div>
+      `;
+      const btnReset = document.getElementById("btn-reset-facciones");
+      if (btnReset) btnReset.addEventListener("click", limpiarFiltrosFacciones);
+      return;
+    }
+
+    visibles.forEach(item => {
+      const muerto = esPersonajeMuerto(item);
+      const card = document.createElement("article");
+      card.className = "card-faccion";
+
+      const top = document.createElement("div");
+      top.className = "card-faccion-top";
+
+      const avatarWrap = document.createElement("div");
+      avatarWrap.className = muerto ? "card-faccion-avatar-wrap es-muerto" : "card-faccion-avatar-wrap";
+
+      const avatar = document.createElement("div");
+      avatar.className = "card-faccion-avatar";
+      const { candidatos } = obtenerCandidatosImagen(item.imagen, item.nombre);
+      let intento = 0;
+      const img = document.createElement("img");
+      img.alt = item.nombre;
+      img.style.objectPosition = item.encuadre || "center 20%";
+      img.onerror = () => {
+        intento++;
+        if (intento < candidatos.length) {
+          img.src = candidatos[intento];
+        } else {
+          avatar.innerHTML = `<span class="card-faccion-inicial">${item.nombre.charAt(0)}</span>`;
+        }
+      };
+      img.src = candidatos[0];
+      avatar.appendChild(img);
+      avatarWrap.appendChild(avatar);
+
+      if (muerto) {
+        const cintaMini = document.createElement("div");
+        cintaMini.className = "cinta-muerto-mini";
+        cintaMini.textContent = "MUERTO";
+        avatarWrap.appendChild(cintaMini);
+      }
+
+      const razaCorta = obtenerEtiquetasRaza(item)[0] || "";
+      const info = document.createElement("div");
+      info.className = "card-faccion-info";
+      info.innerHTML = `
+        <h3 class="card-faccion-nombre">${item.nombre}</h3>
+        <span class="badge-faccion" data-faccion="${item.faccionReal}">${item.faccionReal}</span>
+        ${razaCorta ? `<span class="card-faccion-raza">${razaCorta}</span>` : ""}
+      `;
+
+      top.append(avatarWrap, info);
+      card.appendChild(top);
+
+      const conf = analizarConfianza(item);
+      const bloqueConf = document.createElement("div");
+      bloqueConf.className = "confianza-bloque";
+      bloqueConf.innerHTML = `
+        <div class="confianza-cabecera">
+          <span>Confianza con el grupo</span>
+          <strong style="color: ${conf.color}">${conf.texto}</strong>
+        </div>
+        <div class="confianza-pista">
+          <div class="confianza-relleno" style="width: ${conf.porcentaje}%; background: ${conf.color};"></div>
+        </div>
+      `;
+      card.appendChild(bloqueConf);
+
+      card.addEventListener("click", () => abrirModalCodice(item));
+      elGrillaFacciones.appendChild(card);
+    });
+  }
+
   if (elBtnCerrarModalCodice && elModalCodice) {
     elBtnCerrarModalCodice.addEventListener("click", () => elModalCodice.close());
     elModalCodice.addEventListener("click", (e) => {
@@ -964,9 +1289,9 @@
     });
   }
 
-  document.querySelectorAll(".cat-btn").forEach(btn => {
+  document.querySelectorAll("#filtros-categoria-codice .cat-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("activa"));
+      document.querySelectorAll("#filtros-categoria-codice .cat-btn").forEach(b => b.classList.remove("activa"));
       btn.classList.add("activa");
       categoriaCodiceActiva = btn.dataset.cat;
       nombreDestacadoCodice = "";
@@ -974,10 +1299,47 @@
     });
   });
 
+  if (elFiltroRazaCodice) {
+    elFiltroRazaCodice.addEventListener("change", () => {
+      razaCodiceActiva = elFiltroRazaCodice.value;
+      nombreDestacadoCodice = "";
+      renderizarCodice();
+    });
+  }
+
+  if (elFiltroEstadoCodice) {
+    elFiltroEstadoCodice.addEventListener("change", () => {
+      estadoCodiceActivo = elFiltroEstadoCodice.value;
+      nombreDestacadoCodice = "";
+      renderizarCodice();
+    });
+  }
+
   elBuscarCodice.addEventListener("input", () => {
     nombreDestacadoCodice = "";
     renderizarCodice();
   });
+
+  if (elFiltroRazaFacciones) {
+    elFiltroRazaFacciones.addEventListener("change", () => {
+      razaFaccionesActiva = elFiltroRazaFacciones.value;
+      renderizarFacciones();
+    });
+  }
+
+  if (elFiltroEstadoFacciones) {
+    elFiltroEstadoFacciones.addEventListener("change", () => {
+      estadoFaccionesActivo = elFiltroEstadoFacciones.value;
+      renderizarFacciones();
+    });
+  }
+
+  if (elOrdenFacciones) {
+    elOrdenFacciones.addEventListener("change", () => {
+      ordenFaccionesActivo = elOrdenFacciones.value;
+      renderizarFacciones();
+    });
+  }
 
   /* ==================== EVENTOS GENERALES ==================== */
   if (elBtnToggleResumen) {
@@ -1079,8 +1441,10 @@
 
   aplicarPreferenciasGuardadas();
   poblarSelectorArcos();
+  poblarFiltrosRaza();
   inicializarPilaPersonajes();
   renderizarCodice();
+  renderizarFacciones();
 
   const totalReales = capitulos.filter(c => !c.perdido).length;
   elStats.textContent = `${totalReales} capítulos — ${personajes.length} protagonistas — ${entradasCodice.length} entradas de códice`;
