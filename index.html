@@ -8,23 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
   <header class="cabecera">
     <div class="contenedor cabecera-inner">
-      <div class="marca">
-        <span class="subtitulo-obra">Crónica de campaña</span>
-        <h1 class="titulo-obra">El misterioso mundo de Rubén</h1>
-      </div>
-
-      <div class="barra-acciones">
-        <nav class="navegacion" aria-label="Secciones principales">
-          <button type="button" class="nav-btn activo" data-vista="lector">Novela</button>
-          <button type="button" class="nav-btn" data-vista="personajes">Personajes</button>
-          <button type="button" class="nav-btn" data-vista="codice">Códice</button>
-          <button type="button" class="nav-btn" data-vista="facciones">Facciones</button>
-        </nav>
+      <div class="cabecera-top-row">
+        <div class="marca">
+          <span class="subtitulo-obra">Crónica de campaña</span>
+          <h1 class="titulo-obra">El misterioso mundo de Rubén</h1>
+        </div>
 
         <div class="controles-lectura" aria-label="Ajustes de lectura">
           <button type="button" id="btn-fuente-menos" class="tool-btn" aria-label="Reducir tamaño de letra">A-</button>
@@ -32,6 +25,13 @@
           <button type="button" id="btn-tema" class="tool-btn" aria-label="Cambiar entre modo papel y modo noche">Noche</button>
         </div>
       </div>
+
+      <nav class="navegacion" aria-label="Secciones principales">
+        <button type="button" class="nav-btn activo" data-vista="lector">Novela</button>
+        <button type="button" class="nav-btn" data-vista="personajes">Personajes</button>
+        <button type="button" class="nav-btn" data-vista="codice">Códice</button>
+        <button type="button" class="nav-btn" data-vista="facciones">Facciones</button>
+      </nav>
     </div>
   </header>
 
@@ -39,15 +39,20 @@
     <!-- VISTA 1: LECTOR DE NOVELA -->
     <section id="vista-lector" class="vista activa" aria-label="Lector de capítulos">
       <aside class="indice-lateral" aria-label="Índice de capítulos">
-        <div class="indice-encabezado">Tabla de capítulos</div>
-        <div class="indice-filtros">
-          <label for="buscar-capitulo" class="sr-only">Buscar capítulo</label>
-          <input type="search" id="buscar-capitulo" placeholder="Buscar por número o título">
-          <select id="filtro-arco" aria-label="Filtrar por arco narrativo">
-            <option value="todos">Todos los arcos</option>
-          </select>
+        <button type="button" id="btn-toggle-indice" class="indice-toggle-btn" aria-expanded="true">
+          <span>Tabla de capítulos</span>
+          <span class="indice-toggle-icon" aria-hidden="true">▾</span>
+        </button>
+        <div id="indice-contenido" class="indice-contenido">
+          <div class="indice-filtros">
+            <label for="buscar-capitulo" class="sr-only">Buscar capítulo</label>
+            <input type="search" id="buscar-capitulo" placeholder="Buscar por número o título">
+            <select id="filtro-arco" aria-label="Filtrar por arco narrativo">
+              <option value="todos">Todos los arcos</option>
+            </select>
+          </div>
+          <ul id="lista-capitulos" class="lista-capitulos"></ul>
         </div>
-        <ul id="lista-capitulos" class="lista-capitulos"></ul>
       </aside>
 
       <article class="visor-capitulo" id="visor-capitulo">
@@ -63,9 +68,9 @@
         <div id="cap-cuerpo" class="prosa-capitulo"></div>
 
         <nav class="paginacion-capitulo" aria-label="Navegación entre capítulos">
-          <button type="button" id="btn-anterior" class="pag-btn">Capítulo anterior</button>
+          <button type="button" id="btn-anterior" class="pag-btn">Anterior</button>
           <span id="indicador-progreso" class="indicador-progreso"></span>
-          <button type="button" id="btn-siguiente" class="pag-btn">Capítulo siguiente</button>
+          <button type="button" id="btn-siguiente" class="pag-btn">Siguiente</button>
         </nav>
       </article>
     </section>
@@ -202,8 +207,8 @@
     </div>
   </footer>
 
-  <script src="datos.js?v=3" defer></script>
+  <script src="datos.js?v=6" defer></script>
   <script src="capitulos_index.js" defer></script>
-  <script src="app.js?v=3" defer></script>
+  <script src="app.js?v=6" defer></script>
 </body>
 </html>

@@ -30,6 +30,10 @@
       .trim();
   }
 
+  function esPantallaMovil() {
+    return window.innerWidth <= 900;
+  }
+
   const personajes = DATOS_CAMPANA.personajes || [];
   const entradasCodice = Array.isArray(DATOS_CAMPANA.codice) ? DATOS_CAMPANA.codice : [];
 
@@ -71,6 +75,8 @@
   let estadoFaccionesActivo = "todos";
   let ordenFaccionesActivo = "original";
 
+  const elBtnToggleIndice = document.getElementById("btn-toggle-indice");
+  const elIndiceContenido = document.getElementById("indice-contenido");
   const elListaCap = document.getElementById("lista-capitulos");
   const elFiltroArco = document.getElementById("filtro-arco");
   const elBuscarCap = document.getElementById("buscar-capitulo");
@@ -124,6 +130,20 @@
   function aplicarPreferenciasGuardadas() {
     document.documentElement.style.setProperty("--reading-size", `${tamanoFuente}rem`);
     aplicarTema(leerStorage("novela_tema", "papel"));
+  }
+
+  function configurarIndiceMovil(expandido) {
+    if (!elBtnToggleIndice || !elIndiceContenido) return;
+    elBtnToggleIndice.setAttribute("aria-expanded", String(expandido));
+    elIndiceContenido.hidden = !expandido;
+  }
+
+  if (elBtnToggleIndice && elIndiceContenido) {
+    configurarIndiceMovil(!esPantallaMovil());
+    elBtnToggleIndice.addEventListener("click", () => {
+      const abierto = elBtnToggleIndice.getAttribute("aria-expanded") === "true";
+      configurarIndiceMovil(!abierto);
+    });
   }
 
   /* ==================== UTILIDADES DE ESTADO, RAZA E IMÁGENES ==================== */
@@ -324,6 +344,9 @@
       btn.addEventListener("click", () => {
         const idxReal = capitulos.findIndex(c => c.numero === cap.numero);
         cargarCapitulo(idxReal, true);
+        if (esPantallaMovil()) {
+          configurarIndiceMovil(false);
+        }
       });
 
       li.appendChild(btn);
@@ -417,7 +440,7 @@
     elCapSinopsis.textContent = cap.sinopsis || "";
     elBtnAnt.disabled = idx === 0;
     elBtnSig.disabled = idx === capitulos.length - 1;
-    elProgreso.textContent = `${idx + 1} de ${capitulos.length} entradas`;
+    elProgreso.textContent = `${idx + 1} / ${capitulos.length}`;
     renderizarIndice();
 
     elCapCuerpo.innerHTML = `<div class="estado-carga-cap">Cargando texto del capítulo...</div>`;
@@ -456,7 +479,7 @@
 
     try {
       await navigator.clipboard.writeText(window.location.href);
-      elBtnCopiar.textContent = "Enlace copiado";
+      elBtnCopiar.textContent = "Copiado";
       setTimeout(() => { elBtnCopiar.textContent = "Copiar enlace"; }, 1800);
     } catch {
       elBtnCopiar.textContent = `#cap-${numPad}`;
@@ -708,9 +731,12 @@
   }
 
   function calcularMedidasImagenActiva(cardActiva) {
-    const anchoContenedor = elPilaCartas.clientWidth || 480;
-    const anchoMaximo = Math.min(anchoContenedor, 500);
-    const altoMaximo = Math.min(window.innerHeight * 0.64, 540);
+    const movil = esPantallaMovil();
+    const anchoContenedor = elPilaCartas.clientWidth || (movil ? 330 : 480);
+    const anchoMaximo = Math.min(anchoContenedor, movil ? 330 : 500);
+    const altoMaximo = movil
+      ? Math.min(window.innerHeight * 0.46, 360)
+      : Math.min(window.innerHeight * 0.64, 540);
     const img = cardActiva.querySelector("img");
 
     if (img && img.naturalWidth > 0 && img.naturalHeight > 0) {
@@ -730,8 +756,8 @@
     }
 
     return {
-      ancho: Math.min(anchoContenedor, 400),
-      alto: 320
+      ancho: Math.min(anchoContenedor, movil ? 300 : 400),
+      alto: movil ? 260 : 320
     };
   }
 
@@ -739,14 +765,29 @@
     const total = personajes.length;
     if (total === 0) return;
 
+    const movil = esPantallaMovil();
     const cardActiva = tarjetasDOM[indicePersonaje];
     const { ancho, alto } = calcularMedidasImagenActiva(cardActiva);
 
-    const altoBaseFondo = 320;
-    const desplazamientoNivel1 = Math.max(75, Math.round((alto / 2) - (altoBaseFondo * 0.84 / 2) + 46));
-    const desplazamientoNivel2 = desplazamientoNivel1 + 38;
+    const altoBaseFondo = movil ? 260 : 320;
+    const semiAltoActivo = alto / 2;
+    const margenNivel1 = movil ? 18 : 46;
+    const margenNivel2 = movil ? 32 : 84;
 
-    elPilaCartas.style.height = `${alto + 170}px`;
+    const desplazamientoNivel1 = Math.max(
+      movil ? 20 : 75,
+      Math.round(semiAltoActivo - (altoBaseFondo * 0.84) / 2 + margenNivel1)
+    );
+    const desplazamientoNivel2 = Math.max(
+      movil ? 34 : 113,
+      Math.round(semiAltoActivo - (altoBaseFondo * 0.68) / 2 + margenNivel2)
+    );
+
+    const semiAltoNivel1 = desplazamientoNivel1 + (altoBaseFondo * 0.84) / 2;
+    const semiAltoNivel2 = desplazamientoNivel2 + (altoBaseFondo * 0.68) / 2;
+    const semiAltoTotal = Math.max(semiAltoActivo, semiAltoNivel1, semiAltoNivel2);
+
+    elPilaCartas.style.height = `${Math.ceil(semiAltoTotal * 2 + (movil ? 36 : 28))}px`;
 
     tarjetasDOM.forEach((card, i) => {
       let diff = i - indicePersonaje;
@@ -1374,6 +1415,28 @@
     seleccionarPersonaje(e.deltaY > 0 ? indicePersonaje + 1 : indicePersonaje - 1);
     setTimeout(() => { bloqueoScrollPila = false; }, 320);
   }, { passive: false });
+
+  /* Gestos táctiles (swipe) en la pila de personajes */
+  let toqueInicioX = 0;
+  let toqueInicioY = 0;
+  elPilaCartas.addEventListener("touchstart", (e) => {
+    if (e.touches.length !== 1) return;
+    toqueInicioX = e.touches[0].clientX;
+    toqueInicioY = e.touches[0].clientY;
+  }, { passive: true });
+
+  elPilaCartas.addEventListener("touchend", (e) => {
+    if (e.changedTouches.length !== 1) return;
+    const dx = e.changedTouches[0].clientX - toqueInicioX;
+    const dy = e.changedTouches[0].clientY - toqueInicioY;
+    if (Math.abs(dx) < 36 && Math.abs(dy) < 36) return;
+
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      seleccionarPersonaje(dx < 0 ? indicePersonaje + 1 : indicePersonaje - 1);
+    } else {
+      seleccionarPersonaje(dy < 0 ? indicePersonaje + 1 : indicePersonaje - 1);
+    }
+  }, { passive: true });
 
   window.addEventListener("resize", () => {
     const vistaPers = document.getElementById("vista-personajes");

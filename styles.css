@@ -40,6 +40,7 @@ body {
   font-family: var(--font-ui);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 .sr-only {
@@ -73,10 +74,15 @@ body {
   padding-block: 0.95rem;
 }
 
+.cabecera-top-row {
+  display: contents;
+}
+
 .marca {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  min-width: 0;
 }
 
 .subtitulo-obra {
@@ -93,24 +99,19 @@ body {
   letter-spacing: -0.015em;
 }
 
-.barra-acciones {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.25rem;
-}
-
 .navegacion {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
   border-right: 1px solid var(--rule-light);
   padding-right: 1.25rem;
+  margin-left: auto;
 }
 
 .controles-lectura {
   display: flex;
   gap: 0.35rem;
+  flex-shrink: 0;
 }
 
 button,
@@ -129,6 +130,7 @@ select {
   cursor: pointer;
   font-weight: 500;
   color: var(--ink-muted);
+  white-space: nowrap;
 }
 
 .nav-btn:hover {
@@ -195,12 +197,38 @@ select:focus-visible {
   gap: 0.85rem;
 }
 
-.indice-encabezado {
+.indice-toggle-btn {
+  width: 100%;
+  min-height: 36px;
+  padding: 0 0 0.5rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-light);
   font-family: var(--font-book);
   font-size: 1rem;
   font-weight: 600;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--rule-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+
+.indice-toggle-icon {
+  display: none;
+  color: var(--accent-seal);
+  transition: transform 0.2s ease;
+}
+
+.indice-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: 0;
+}
+
+.indice-contenido[hidden] {
+  display: none !important;
 }
 
 .indice-filtros {
@@ -305,8 +333,8 @@ select {
 
 .btn-enlace-cap {
   margin-left: auto;
-  min-height: 32px;
-  padding: 0.2rem 0.65rem;
+  min-height: 36px;
+  padding: 0.25rem 0.75rem;
   background: transparent;
   border: 1px solid var(--rule-light);
   border-radius: 3px;
@@ -323,7 +351,7 @@ select {
 .titulo-capitulo {
   margin: 0 0 1rem;
   font-family: var(--font-book);
-  font-size: clamp(1.85rem, 3.6vw, 2.6rem);
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -404,7 +432,7 @@ select {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .pag-btn:disabled {
@@ -423,7 +451,7 @@ select {
   background: var(--bg-margin);
   border: 1px solid var(--rule-light);
   border-radius: 20px;
-  padding: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.25rem, 4vw, 3rem);
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 2.5rem;
@@ -440,6 +468,7 @@ select {
   align-items: center;
   justify-content: center;
   user-select: none;
+  touch-action: pan-y;
   transition: height 0.7s var(--ease-card);
 }
 
@@ -501,11 +530,13 @@ select {
 }
 
 .panel-detalle-personaje {
+  position: relative;
+  z-index: 15;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 1.25rem;
+  gap: 1.1rem;
   padding-inline: 0.5rem;
 }
 
@@ -568,7 +599,7 @@ select {
 .pila-nombre {
   margin: 0;
   font-family: var(--font-book);
-  font-size: clamp(1.7rem, 3vw, 2.25rem);
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
   font-weight: 700;
   color: var(--accent-seal);
   line-height: 1.15;
@@ -596,8 +627,8 @@ select {
 }
 
 .btn-forma {
-  min-height: 36px;
-  padding: 0.3rem 0.95rem;
+  min-height: 38px;
+  padding: 0.35rem 1rem;
   border: 0;
   border-radius: 999px;
   background: transparent;
@@ -639,7 +670,7 @@ select {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.55rem;
-  margin-top: -0.35rem;
+  margin-top: -0.25rem;
 }
 
 .acciones-personaje:empty {
@@ -647,12 +678,12 @@ select {
 }
 
 .btn-mini-pila {
-  min-height: 32px;
-  padding: 0.22rem 0.8rem;
+  min-height: 38px;
+  padding: 0.3rem 0.95rem;
   background: var(--bg-folio);
   border: 1px solid var(--rule-light);
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.84rem;
   font-weight: 600;
   color: var(--accent-seal);
   cursor: pointer;
@@ -708,16 +739,16 @@ select {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  max-height: 190px;
+  gap: 0.65rem;
+  max-height: 210px;
   overflow-y: auto;
 }
 
 .item-vinculo {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding-bottom: 0.5rem;
+  gap: 0.25rem;
+  padding-bottom: 0.55rem;
   border-bottom: 1px dashed var(--rule-light);
 }
 
@@ -743,7 +774,7 @@ select {
   background: var(--accent-tint);
   border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0.15rem 0.6rem;
+  padding: 0.25rem 0.7rem;
   font-size: 0.76rem;
   font-weight: 600;
   color: var(--accent-seal);
@@ -814,21 +845,22 @@ select {
   justify-content: space-between;
   align-items: end;
   gap: 1.25rem;
-  padding-bottom: 1.4rem;
-  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--rule-heavy);
 }
 
 .cabecera-codice h2 {
   margin: 0 0 0.35rem;
   font-family: var(--font-book);
-  font-size: clamp(1.65rem, 3vw, 2.2rem);
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
 }
 
 .descripcion-codice {
   margin: 0;
   color: var(--ink-muted);
   max-width: 55ch;
+  font-size: 0.94rem;
 }
 
 .controles-codice {
@@ -836,6 +868,7 @@ select {
   flex-direction: column;
   align-items: flex-end;
   gap: 0.65rem;
+  min-width: 0;
 }
 
 .filtros-categoria {
@@ -870,6 +903,7 @@ select {
   font-weight: 500;
   cursor: pointer;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .cat-btn:hover {
@@ -885,7 +919,7 @@ select {
 .grilla-codice {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
-  gap: 1.65rem;
+  gap: 1.5rem;
   align-items: start;
 }
 
@@ -1043,7 +1077,7 @@ select {
 .btn-abrir-ficha {
   background: transparent;
   border: 0;
-  padding: 0.2rem 0;
+  padding: 0.25rem 0;
   color: var(--accent-seal);
   font-weight: 600;
   cursor: pointer;
@@ -1057,7 +1091,7 @@ select {
 .btn-ir-cap {
   background: transparent;
   border: 0;
-  padding: 0.2rem 0;
+  padding: 0.25rem 0;
   color: var(--ink-muted);
   font-weight: 500;
   cursor: pointer;
@@ -1087,7 +1121,7 @@ select {
 .grilla-facciones {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-  gap: 1.25rem;
+  gap: 1.15rem;
 }
 
 .card-faccion {
@@ -1095,10 +1129,10 @@ select {
   border: 1px solid var(--rule-light);
   border-top: 3px solid var(--rule-heavy);
   border-radius: 10px;
-  padding: 1rem;
+  padding: 0.95rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.8rem;
   cursor: pointer;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -1263,8 +1297,8 @@ html[data-tema="oscuro"] .badge-faccion[data-faccion="Los de una tierra distante
 
 /* ==================== MODAL DE FICHA DE CÓDICE ==================== */
 .modal-codice {
-  width: min(820px, calc(100% - 2rem));
-  max-height: 88vh;
+  width: min(820px, calc(100% - 1.5rem));
+  max-height: 90dvh;
   padding: 0;
   overflow: hidden;
   border: 1px solid var(--rule-light);
@@ -1282,22 +1316,22 @@ html[data-tema="oscuro"] .badge-faccion[data-faccion="Los de una tierra distante
 
 .modal-codice-contenido {
   position: relative;
-  padding: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1.1rem, 3vw, 2rem);
   overflow-y: auto;
-  max-height: 88vh;
+  max-height: 90dvh;
 }
 
 .btn-cerrar-modal {
   position: sticky;
   top: 0;
   float: right;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: 1px solid var(--rule-light);
   background: var(--bg-margin);
   color: var(--ink-primary);
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   line-height: 1;
   display: inline-flex;
   align-items: center;
@@ -1350,20 +1384,20 @@ html[data-tema="oscuro"] .badge-faccion[data-faccion="Los de una tierra distante
   align-items: center;
   gap: 0.65rem;
   margin-bottom: 0.75rem;
-  padding-right: 2.5rem;
+  padding-right: 2.75rem;
 }
 
 .modal-info-cabecera h3 {
   margin: 0;
   font-family: var(--font-book);
-  font-size: clamp(1.55rem, 2.8vw, 2rem);
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
   font-weight: 700;
   color: var(--accent-seal);
 }
 
 .modal-ficha-datos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 0.55rem 1rem;
   padding: 0.9rem 1rem;
   margin-bottom: 1.15rem;
@@ -1460,26 +1494,152 @@ html[data-tema="oscuro"] .badge-faccion[data-faccion="Los de una tierra distante
   }
 }
 
+/* ==================== OPTIMIZACIÓN MÓVIL ==================== */
 @media (max-width: 900px) {
+  .contenedor {
+    width: min(1220px, 100% - 1.5rem);
+  }
+
+  /* Libera la pantalla completa en celular evitando que la cabecera tape 40% del alto */
+  .cabecera {
+    position: static;
+  }
+
+  .cabecera-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding-block: 0.75rem 0.5rem;
+  }
+
+  .cabecera-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
+  }
+
+  .titulo-obra {
+    font-size: clamp(1.12rem, 4.8vw, 1.4rem);
+    line-height: 1.2;
+  }
+
+  .controles-lectura .tool-btn {
+    min-height: 38px;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.82rem;
+  }
+
+  /* Las 4 pestañas en una sola fila uniforme */
+  .navegacion {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.15rem;
+    width: 100%;
+    margin-left: 0;
+    border-right: 0;
+    padding-right: 0;
+    border-top: 1px solid var(--rule-light);
+    padding-top: 0.25rem;
+  }
+
+  .nav-btn {
+    min-height: 40px;
+    padding: 0.35rem 0.25rem;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .principal {
+    padding-block: 1.25rem 3rem;
+  }
+
+  /* Lector e índice plegable */
   #vista-lector {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.25rem;
   }
 
   .indice-lateral {
     position: static;
-    max-height: 290px;
+    max-height: none;
+    padding: 0.75rem 0.9rem;
+    gap: 0.65rem;
   }
 
-  .navegacion {
-    border-right: 0;
-    padding-right: 0;
+  .indice-toggle-btn {
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
+  .indice-toggle-btn[aria-expanded="true"] {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule-light);
+  }
+
+  .indice-toggle-icon {
+    display: inline-block;
+  }
+
+  .indice-toggle-btn[aria-expanded="false"] .indice-toggle-icon {
+    transform: rotate(-90deg);
+  }
+
+  .lista-capitulos {
+    max-height: 220px;
+  }
+
+  .prosa-capitulo {
+    line-height: 1.75;
+  }
+
+  .paginacion-capitulo {
+    margin-top: 2.25rem;
+    padding-top: 1.15rem;
+  }
+
+  .pag-btn {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  /* Carrusel de personajes: carta más amplia y texto separado abajo */
   .escenario-personajes {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.85rem;
     min-height: auto;
+    padding: 1.35rem 1rem 1.75rem;
+    border-radius: 14px;
+  }
+
+  .card-personaje {
+    width: min(100%, 305px);
+    height: 260px;
+    border-radius: 16px;
+  }
+
+  .panel-detalle-personaje {
+    gap: 0.9rem;
+    padding-inline: 0.15rem;
+    margin-top: 0.35rem;
+  }
+
+  .indicadores-lineas {
+    flex-direction: row;
+    width: auto;
+    gap: 6px;
+  }
+
+  .linea-indicador {
+    width: 24px;
+    height: 4px;
+  }
+
+  /* Filtros horizontales deslizables y grilla de 2 columnas en Códice / Facciones */
+  .cabecera-codice {
+    gap: 0.9rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
   }
 
   .controles-codice {
@@ -1487,16 +1647,57 @@ html[data-tema="oscuro"] .badge-faccion[data-faccion="Los de una tierra distante
     width: 100%;
   }
 
-  .filtros-secundarios select,
-  .filtros-secundarios input[type="search"] {
+  .filtros-categoria {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filtros-categoria::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cat-btn {
+    min-height: 40px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.84rem;
+  }
+
+  .filtros-secundarios {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .filtros-secundarios select {
     width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    font-size: 0.86rem;
+    padding-inline: 0.55rem;
+  }
+
+  .filtros-secundarios input[type="search"],
+  .filtros-secundarios select:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 42px;
+  }
+
+  .modal-codice {
+    width: calc(100% - 1rem);
+    max-height: 92dvh;
+    border-radius: 12px;
   }
 
   .modal-codice-grid {
     grid-template-columns: 1fr;
+    gap: 1.1rem;
   }
 
   .modal-retrato-completo img {
-    max-height: 300px;
+    max-height: 280px;
   }
 }
