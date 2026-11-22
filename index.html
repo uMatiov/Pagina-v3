@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="papel">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Crónica novelada, archivo de protagonistas y códice de El misterioso mundo de Rubén.">
+  <title>El misterioso mundo de Rubén</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="contenedor cabecera-inner">
+      <div class="marca">
+        <span class="subtitulo-obra">Crónica de campaña</span>
+        <h1 class="titulo-obra">El misterioso mundo de Rubén</h1>
+      </div>
+
+      <div class="barra-acciones">
+        <nav class="navegacion" aria-label="Secciones principales">
+          <button type="button" class="nav-btn activo" data-vista="lector">Novela</button>
+          <button type="button" class="nav-btn" data-vista="personajes">Personajes</button>
+          <button type="button" class="nav-btn" data-vista="codice">Códice</button>
+        </nav>
+
+        <div class="controles-lectura" aria-label="Ajustes de lectura">
+          <button type="button" id="btn-fuente-menos" class="tool-btn" aria-label="Reducir tamaño de letra">A-</button>
+          <button type="button" id="btn-fuente-mas" class="tool-btn" aria-label="Aumentar tamaño de letra">A+</button>
+          <button type="button" id="btn-tema" class="tool-btn" aria-label="Cambiar entre modo papel y modo noche">Noche</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="contenedor principal">
+    <!-- VISTA 1: LECTOR DE NOVELA -->
+    <section id="vista-lector" class="vista activa" aria-label="Lector de capítulos">
+      <aside class="indice-lateral" aria-label="Índice de capítulos">
+        <div class="indice-encabezado">Tabla de capítulos</div>
+        <div class="indice-filtros">
+          <label for="buscar-capitulo" class="sr-only">Buscar capítulo</label>
+          <input type="search" id="buscar-capitulo" placeholder="Buscar por número o título">
+          <select id="filtro-arco" aria-label="Filtrar por arco narrativo">
+            <option value="todos">Todos los arcos</option>
+          </select>
+        </div>
+        <ul id="lista-capitulos" class="lista-capitulos"></ul>
+      </aside>
+
+      <article class="visor-capitulo" id="visor-capitulo">
+        <div class="meta-capitulo">
+          <span id="cap-arco" class="etiqueta-arco">Arco I</span>
+          <span class="separador-meta" aria-hidden="true">/</span>
+          <span id="cap-numero" class="num-capitulo">Capítulo 01</span>
+          <button type="button" id="btn-copiar-enlace" class="btn-enlace-cap" title="Copiar enlace directo a este capítulo">Copiar enlace</button>
+        </div>
+        <h2 id="cap-titulo" class="titulo-capitulo">Cargando capítulo...</h2>
+        <p id="cap-sinopsis" class="sinopsis-capitulo"></p>
+
+        <div id="cap-cuerpo" class="prosa-capitulo"></div>
+
+        <nav class="paginacion-capitulo" aria-label="Navegación entre capítulos">
+          <button type="button" id="btn-anterior" class="pag-btn">Capítulo anterior</button>
+          <span id="indicador-progreso" class="indicador-progreso"></span>
+          <button type="button" id="btn-siguiente" class="pag-btn">Capítulo siguiente</button>
+        </nav>
+      </article>
+    </section>
+
+    <!-- VISTA 2: CARRUSEL APILADO DE PERSONAJES -->
+    <section id="vista-personajes" class="vista" hidden aria-label="Personajes principales">
+      <div class="escenario-personajes" id="escenario-personajes">
+        <div class="pila-cartas-wrapper" id="pila-cartas" aria-label="Galería apilada de personajes"></div>
+
+        <div class="panel-detalle-personaje">
+          <div class="controles-pila">
+            <button type="button" id="btn-pers-arriba" class="btn-flecha" aria-label="Personaje anterior">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+            </button>
+            <button type="button" id="btn-pers-abajo" class="btn-flecha" aria-label="Personaje siguiente">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+          </div>
+
+          <div class="cabecera-nombre-pila">
+            <div class="fila-nombre-lineas">
+              <span class="linea-flanco" aria-hidden="true"></span>
+              <h2 id="pers-nombre" class="pila-nombre">Nombre</h2>
+              <span class="linea-flanco" aria-hidden="true"></span>
+            </div>
+            <span id="pers-rol" class="pila-rol">Rol</span>
+          </div>
+
+          <div id="selector-formas" class="selector-formas" role="group" aria-label="Formas del personaje" hidden></div>
+
+          <p id="pers-resumen" class="pila-resumen"></p>
+
+          <div class="acciones-personaje">
+            <button type="button" id="btn-toggle-resumen" class="btn-mini-pila" hidden>Ver más</button>
+            <button type="button" id="btn-toggle-vinculos" class="btn-mini-pila" aria-expanded="false" hidden>Vínculos</button>
+          </div>
+
+          <div id="panel-vinculos" class="panel-vinculos" hidden>
+            <div class="titulo-vinculos">Vínculos y relaciones</div>
+            <ul id="lista-vinculos" class="lista-vinculos"></ul>
+          </div>
+
+          <div class="pila-ficha-extra">
+            <span><strong>Rasgo:</strong> <span id="pers-rasgo"></span></span>
+            <span><strong>Estado:</strong> <span id="pers-estado"></span></span>
+          </div>
+
+          <div id="indicadores-personajes" class="indicadores-lineas" aria-label="Selector directo de personaje"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 3: CÓDICE DEL MUNDO -->
+    <section id="vista-codice" class="vista" hidden aria-label="Códice de campaña">
+      <div class="cabecera-codice">
+        <div>
+          <h2>Códice de archivo</h2>
+          <p class="descripcion-codice">Registro de aliados, secundarios, lugares, facciones y objetos relevantes de la campaña.</p>
+        </div>
+
+        <div class="controles-codice">
+          <div id="filtros-categoria-codice" class="filtros-categoria" role="group" aria-label="Filtrar por categoría">
+            <button type="button" class="cat-btn activa" data-cat="todos">Todos</button>
+            <button type="button" class="cat-btn" data-cat="NPC">NPCs</button>
+            <button type="button" class="cat-btn" data-cat="Lugar">Lugares</button>
+            <button type="button" class="cat-btn" data-cat="Facción">Facciones</button>
+            <button type="button" class="cat-btn" data-cat="Objeto">Objetos</button>
+          </div>
+          <label for="buscar-codice" class="sr-only">Buscar en el códice</label>
+          <input type="search" id="buscar-codice" placeholder="Buscar nombre, lugar o detalle">
+        </div>
+      </div>
+
+      <div id="grilla-codice" class="grilla-codice"></div>
+    </section>
+  </main>
+
+  <!-- MODAL DE FICHA COMPLETA DEL CÓDICE -->
+  <dialog id="modal-codice" class="modal-codice" aria-labelledby="modal-codice-titulo">
+    <div class="modal-codice-contenido">
+      <button type="button" id="btn-cerrar-modal-codice" class="btn-cerrar-modal" aria-label="Cerrar ficha">&times;</button>
+      <div id="modal-codice-cuerpo" class="modal-codice-cuerpo"></div>
+    </div>
+  </dialog>
+
+  <footer class="pie">
+    <div class="contenedor pie-inner">
+      <span>El misterioso mundo de Rubén</span>
+      <span id="estadisticas-archivo"></span>
+    </div>
+  </footer>
+
+  <script src="datos.js" defer></script>
+  <script src="capitulos_index.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
